@@ -24,6 +24,16 @@ def pytest_runtest_setup(item):
         )
 
 
+# @pytest.hookimpl(hookwrapper=True)
+# def pytest_fixture_setup(fixturedef, request):
+#     outcome = yield
+#     result = outcome.get_result()
+#     if is_lazy_fixture(result):
+#         result = request.getfixturevalue(result.name)
+#         fixturedef.cached_result = (result, request.param_index, None)
+#     return result
+
+
 def fillfixtures(_fillfixtures):
     def fill(request):
         item = request._pyfuncitem

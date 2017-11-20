@@ -540,6 +540,29 @@ def test_argnames_initialized_in_right_order2(testdir):
     reprec.assertoutcome(passed=1)
 
 
+def test_argnames_initialized_in_right_order3(testdir):
+    testdir.makepyfile("""
+        import pytest
+        @pytest.fixture
+        def one(b):
+            return 1 + b
+
+        @pytest.fixture
+        def plus_two():
+            return 2
+        def test_skip1(a):
+            assert a == 3
+
+        def pytest_generate_tests(metafunc):
+            metafunc.fixturenames = ['a', 'b']
+            metafunc.parametrize(argnames=['a', 'b'],
+                                 argvalues=[(pytest.lazy_fixture('one'), pytest.lazy_fixture('plus_two'))])
+
+    """)
+    reprec = testdir.inline_run('-s', '-v')
+    reprec.assertoutcome(passed=1)
+
+
 def lf(fname):
     return lazy_fixture(fname)
 
